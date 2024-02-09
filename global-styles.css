@@ -1,0 +1,29 @@
+.pNetcost, .pprice {
+    text-align: left;
+}
+.dateUpdated {
+    text-align: right;
+}
+.pNetcostValue {
+    font-size: 20px;
+    font-weight: bold;
+}
+.pNetcostValueSmall {
+    font-size: 16px;
+    font-weight: bold;
+}
+.ppriceValue {
+    font-size: 15px;
+    color: gray;
+}
+.ppriceValueSmall {
+    font-size: 13px;
+    color: gray;
+}
+.removeProduct{
+    color: red;
+    margin-top: 10px;
+}
+.removeProduct:hover{
+    cursor: pointer;
+}

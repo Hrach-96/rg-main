@@ -1,0 +1,101 @@
+body{
+
+}
+img{
+	max-width:100%;
+	height:auto;
+}
+#container{
+	
+}
+#menu{
+	border-bottom:1px solid #999;
+}
+#menuItem {
+	background:#FFF;
+	margin-left:5px;
+	border:solid 1px #CCC;
+	border-radius:3px;
+	padding:3px;
+	cursor:pointer;
+	text-decoration:none;
+}
+#menuItem:hover{
+	background:#F9F9F9;
+	border-color:#999;
+}
+
+#menu div{
+	display:inline;
+}
+#authorization{
+	margin-top:50px;
+	margin-left:auto;
+	margin-right:auto;
+	width:90%;
+}
+#aItem{
+    display: inline-block;
+}
+#authorization div{
+	padding:5px;
+}
+#sign-in{
+	text-align:left;
+	max-width:374px;
+	border-right:1px dashed #999;
+}
+#sign-in input{
+	margin:5px;
+	display:inline;
+	max-width:275px;
+	
+}
+#footer{
+	text-decoration:none;
+	margin-top:5px;
+	margin-right:auto;
+	margin-left:auto;
+	width:90%;
+	text-align:center;
+}
+#footer ul {
+	list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+#footer li {
+    display: inline;
+}
+@media screen and (max-width:450px) {
+    #menuItem {
+		display: block;
+		text-align:center;
+		margin-left:0px;
+	}
+	#aItem {
+		display: block;
+	}
+	#sign-in{
+		text-align:left;
+		max-width:374px;
+		border-right:0px;
+		border-bottom:1px dashed #999;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

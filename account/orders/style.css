@@ -1,0 +1,77 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	
+	background:#F6F4F0;
+	font-family:Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, sans-serif
+	}
+td.top_row{
+	background:#555555;
+	color:#FFFFFF;
+	}
+td.bottom_row{
+	color:#000;
+	background:#FFFFFF;
+	}
+td#log{
+	white-space:nowrap;
+	font-size:12px;
+	}
+select.form-control.select{
+	width:150px;
+	float:left;
+	}
+.mini_btn{
+	width:100px;
+	float:left;
+	}
+	
+.article {
+   border-bottom: 1px dotted grey;
+   padding: 0px;
+   margin: 0px;
+}
+.article .text {
+   font-size: 13px;
+   line-height: 17px;
+   font-family: arial;
+}
+.article .text.short {
+   height: 0px;
+   overflow: hidden;
+}
+.article .text.full {
+
+}
+.read-more {
+   cursor: pointer;
+   display: inline-block;    
+   font-weight: bold;
+   padding: 3px;
+   background-color: #06c;
+   color: white;
+   margin: 2px;
+/*#car-delivery{
+	background-image:url(Icons/car_delivery.jpg);
+	}*/
+}
+.search_white{
+	color:white;
+	}
+
+.print_table{
+  width: 400px;
+  margin-bottom: 20px;
+ 
+	}
+.print_table th{
+	padding-bottom: 20px;
+	font-size:14px;
+}
+.print_table td{
+	padding-bottom: 20px;
+	font-size:14px;
+}
+.td_div_border{
+	border-bottom:1px solid #000000;
+	}

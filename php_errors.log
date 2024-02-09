@@ -1,0 +1,22 @@
+[15-Jan-2024 14:15:25 Asia/Yerevan] PHP Warning:  PDOStatement::execute(): MySQL server has gone away in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 43
+[15-Jan-2024 14:15:25 Asia/Yerevan] PHP Warning:  PDOStatement::execute(): Error reading result set's header in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 43
+[15-Jan-2024 14:15:25 Asia/Yerevan] PHP Warning:  Invalid argument supplied for foreach() in /home/admin/web/new.regard-group.ru/public_html/data.php on line 653
+[15-Jan-2024 17:16:26 Asia/Yerevan] PHP Warning:  PDOStatement::execute(): MySQL server has gone away in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 43
+[15-Jan-2024 17:16:26 Asia/Yerevan] PHP Warning:  PDOStatement::execute(): Error reading result set's header in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 43
+[20-Jan-2024 13:54:38 Asia/Yerevan] PHP Warning:  PDO::__construct(): MySQL server has gone away in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 28
+[20-Jan-2024 13:54:38 Asia/Yerevan] PHP Warning:  PDO::__construct(): Error while reading greeting packet. PID=26479 in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 28
+[20-Jan-2024 13:54:38 Asia/Yerevan] PHP Warning:  PDOStatement::execute(): MySQL server has gone away in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 43
+[20-Jan-2024 13:54:38 Asia/Yerevan] PHP Warning:  PDOStatement::execute(): Error reading result set's header in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 43
+[20-Jan-2024 13:55:17 Asia/Yerevan] PHP Warning:  PDOStatement::execute(): MySQL server has gone away in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 43
+[20-Jan-2024 13:55:17 Asia/Yerevan] PHP Warning:  PDOStatement::execute(): Error reading result set's header in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 43
+[20-Jan-2024 13:55:17 Asia/Yerevan] PHP Warning:  PDO::prepare(): MySQL server has gone away in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 41
+[27-Jan-2024 18:59:10 Asia/Yerevan] PHP Warning:  PDOStatement::execute(): MySQL server has gone away in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 43
+[27-Jan-2024 18:59:10 Asia/Yerevan] PHP Warning:  PDOStatement::execute(): Error reading result set's header in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 43
+[28-Jan-2024 15:49:16 Asia/Yerevan] PHP Warning:  PDOStatement::execute(): MySQL server has gone away in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 43
+[28-Jan-2024 15:49:16 Asia/Yerevan] PHP Warning:  PDOStatement::execute(): Error reading result set's header in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 43
+[28-Jan-2024 15:53:48 Asia/Yerevan] PHP Warning:  PDO::__construct(): MySQL server has gone away in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 28
+[28-Jan-2024 15:53:48 Asia/Yerevan] PHP Warning:  PDO::__construct(): Error while reading greeting packet. PID=6008 in /home/admin/web/new.regard-group.ru/public_html/database/DatabaseConnection.php on line 28
+[04-Feb-2024 01:37:58 Etc/UTC] PHP Warning:  include_once(ajax/ajaxfunctions.php): failed to open stream: No such file or directory in /home/admin/web/new.regard-group.ru/public_html/ajax.php on line 3
+[04-Feb-2024 01:37:58 Etc/UTC] PHP Warning:  include_once(): Failed opening 'ajax/ajaxfunctions.php' for inclusion (include_path='.:/usr/share/pear:/usr/share/php') in /home/admin/web/new.regard-group.ru/public_html/ajax.php on line 3
+[04-Feb-2024 05:38:25 Asia/Yerevan] PHP Notice:  Undefined index: suid in /home/admin/web/new.regard-group.ru/public_html/print.php on line 32
+[04-Feb-2024 05:38:25 Asia/Yerevan] PHP Notice:  Undefined offset: 0 in /home/admin/web/new.regard-group.ru/public_html/print.php on line 36

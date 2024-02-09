@@ -1,0 +1,131 @@
+.input-output{
+    margin: 4px 0;
+}
+.input-output input {
+    display: none
+}
+
+.input-output label {
+    /*width: auto;*/
+    width: 45%;
+    height: 50px;
+    display: inline-block;
+    font-size: 24px;
+    margin: 0 4px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.head-filter-par {
+    background-color: #ababab;
+}
+
+.head-filter > div {
+    margin-top: 5px;
+}
+
+.head-filter input, .head-filter select {
+    margin: 9px 0;
+    height: 40px;
+}
+
+.toggle_filter {
+    background-color: #ababab;
+    font-size: 25px;
+}
+
+.toggle_filter {
+    background-color: #ababab;
+}
+
+.header-space {
+    height: 60px;
+}
+
+.user-name {
+    font-size: 22px;
+    line-height: 57px;
+    color: #0A246A;
+    font-weight: bold;
+    /*background-color: lightgrey;*/
+}
+#data_table>tbody>tr>td:last-child a{
+    font-size: 14px;
+    margin:0 10px;
+}
+/*#data_table{*/
+/*overflow-x: auto;*/
+/*display: block;*/
+/*margin: 0 auto;*/
+/*text-align: center;*/
+/*width: max-content;*/
+/*}*/
+/*.dataTables_wrapper{*/
+/*width: max-content;*/
+/*margin: 0 auto;*/
+/*}*/
+.par_data_table {
+    overflow-x: auto
+}
+
+.margin-top {
+    margin-top: 15px;
+}
+
+.error_small_red {
+    color: red;
+    font-size: 12px;
+}
+
+.toggle_filter {
+    display: none;
+}
+
+.filter_close {
+    display: none;
+}
+
+@media only screen and (max-width: 1199px) {
+    .header-space {
+        height: 155px;
+    }
+}
+
+@media only screen and (max-width: 991px) {
+    .head-filter.hide_filter {
+        display: none;
+    }
+
+    .filter_close {
+        display: none;
+    }
+
+    .toggle_filter {
+        display: block;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .header-space {
+        height: 60px;
+    }
+}
+
+/*@media only screen and (max-width: 1450px) {*/
+/*@media only screen and (min-width: 990px) and (max-width: 1450px) {*/
+    /*.col-my-1 {*/
+        /*width: 16.66666667%;*/
+    /*}*/
+
+    /*.col-my-2 {*/
+        /*width: 33.33333333%;*/
+    /*}*/
+
+    /*.col-my-3 {*/
+        /*width: 50%;*/
+    /*}*/
+
+    /*.col-my-4 {*/
+        /*width: 66.666666673%;*/
+    /*}*/
+/*}*/

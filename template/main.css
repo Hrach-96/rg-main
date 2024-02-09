@@ -1,0 +1,69 @@
+body{
+	background:#F7F7F7 url("http://anahit.am/apay/template/images/background.png") repeat;
+}
+
+#cBase{
+	border-radius:3px;
+	max-width:600px;
+	background:#fff;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:5%;
+	padding:5px;
+	text-align:center;
+}
+#cHeader{
+	background:url("http://anahit.am/apay/template/images/header.png") repeat;
+	border:1px solid #838080;
+	border-radius:3px;
+	text-align:left;
+	font-size:16px;
+	font-weight:bold;
+	padding:5px;
+	color:#E0D8D8;
+}
+#cHeader ul {
+	list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+#cHeader li {
+    display: inline;
+}
+#cContent {
+	border: dashed 1px #999;
+	border-radius: 5px;
+	padding: 5px;
+	margin-top: 5px;
+}
+#cContent div{
+	padding:5px;
+	border-bottom:solid 2px #838080;
+	text-align:left;
+}
+#cContent div span{
+	text-align:left;
+}
+.cHeadText{
+	color:#666363;
+	margin-right:5px;
+	float:left;
+	min-width:150px;
+}
+
+.paper{
+	background:url("http://anahit.am/apay/template/images/paper.png") repeat;
+	color:#3F424F;
+	padding-left:3px;
+	padding-right:3px;
+	border-radius:3px;
+}
+.cDetailText{
+	color:#A90A0A;
+	font-weight:bold;
+}
+@media screen and (max-width:600px) {
+     #cHeader li {
+		display: block;
+	}
+}
