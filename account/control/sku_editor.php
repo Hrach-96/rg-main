@@ -237,6 +237,15 @@ function addToTotalPricesStockTable($product_id,$outcount){
                 SKU Code
             </th>
             <th>
+                Armenian responsible
+            </th>
+            <th>
+                Russian responsible
+            </th>
+            <th>
+                English responsible
+            </th>
+            <th>
                 Brand Name
             </th>
             <th>
@@ -373,6 +382,15 @@ function addToTotalPricesStockTable($product_id,$outcount){
                             echo $value['sku_code'];
                         }
                     ?>
+                </td>
+                <td>
+                    <?= $value['arm_responsible'] ?>
+                </td>
+                <td>
+                    <?= $value['rus_responsible'] ?>
+                </td>
+                <td>
+                    <?= $value['en_responsible'] ?>
                 </td>
                 <td>
                     <?= $value['brand_name'] ?>
@@ -889,9 +907,9 @@ function addToTotalPricesStockTable($product_id,$outcount){
             // var id = Number(this_tr.find('td').eq(0).text());
 
             var text_arr = [];
-            for (var i = 0; i < 39; i++) {
+            for (var i = 0; i < 42; i++) {
                 var curr_td = this_tr.find('td').eq(i + 1);
-                if(i >= 34 && i < 37){
+                if(i >= 37 && i < 40){
                     text_arr[i] = $(curr_td).attr('data-val');
                 }
                 else{
@@ -912,67 +930,70 @@ function addToTotalPricesStockTable($product_id,$outcount){
             icon_images_jquery_select+="</select>";
             var inp_arr = [];
             inp_arr[0] = '<input type="text" name="sku_code" value="' + text_arr[0] + '" class="form-control sku_code">';
-            inp_arr[1] = '<input type="text" name="brand_name" value="' + text_arr[1] + '" class="form-control brand_name">';
-            inp_arr[2] = '<input type="text" name="title_keyword" value="' + text_arr[2] + '" class="form-control title_keyword">';
-            inp_arr[3] = '<input type="text" name="title_emoji" value="' + text_arr[3] + '" class="form-control title_emoji">';
-            inp_arr[4] = '<input type="text" name="quantity" value="' + text_arr[4] + '" class="form-control quantity">';
-            inp_arr[5] = icon_images_jquery_select;
+            inp_arr[1] = '<input type="text" name="arm_responsible" value="' + text_arr[1] + '" class="form-control arm_responsible">';
+            inp_arr[2] = '<input type="text" name="rus_responsible" value="' + text_arr[2] + '" class="form-control rus_responsible">';
+            inp_arr[3] = '<input type="text" name="en_responsible" value="' + text_arr[3] + '" class="form-control en_responsible">';
+            inp_arr[4] = '<input type="text" name="brand_name" value="' + text_arr[4] + '" class="form-control brand_name">';
+            inp_arr[5] = '<input type="text" name="title_keyword" value="' + text_arr[5] + '" class="form-control title_keyword">';
+            inp_arr[6] = '<input type="text" name="title_emoji" value="' + text_arr[6] + '" class="form-control title_emoji">';
+            inp_arr[7] = '<input type="text" name="quantity" value="' + text_arr[7] + '" class="form-control quantity">';
+            inp_arr[8] = icon_images_jquery_select;
             
-            inp_arr[6] = '<select class="depended_from_price form-control" name="depended_from_price">' +
+            inp_arr[9] = '<select class="depended_from_price form-control" name="depended_from_price">' +
                 '<option class="depended_from_price_Yes" value="Yes">Yes</option>' +
                 '<option class="depended_from_price_No" value="No">No</option>' +
                 '</select>';
-            inp_arr[7] = '<input type="text" name="dependent_price" value="' + text_arr[7] + '" class="form-control dependent_price">';
-            inp_arr[8] = '<select class="everytime_available form-control" name="everytime_available">' +
+            inp_arr[10] = '<input type="text" name="dependent_price" value="' + text_arr[10] + '" class="form-control dependent_price">';
+            inp_arr[11] = '<select class="everytime_available form-control" name="everytime_available">' +
                 '<option class="everytime_available_Yes" value="Yes">Yes</option>' +
                 '<option class="everytime_available_No" value="No">No</option>' +
                 '</select>';
-            inp_arr[9] = '<input type="text" name="prepare_time_1" value="' + text_arr[9] + '" class="form-control prepare_time_1">';
-            inp_arr[10] = '<input type="text" name="prepare_time_2" value="' + text_arr[10] + '" class="form-control prepare_time_2">';
-            inp_arr[11] = '<input type="time" name="design_time_1" value="' + text_arr[11] + '" class="form-control design_time_1">';
-            inp_arr[12] = '<input type="time" name="design_time_2" value="' + text_arr[12] + '" class="form-control design_time_2">';
-            inp_arr[13] = '<input type="text" name="am_title" value="' + text_arr[13] + '" class="form-control am_title">';
-            inp_arr[14] = '<input type="text" name="am_desc" value="' + text_arr[14] + '" class="form-control am_desc">';
-            inp_arr[15] = '<input type="text" name="ru_title" value="' + text_arr[15] + '" class="form-control ru_title">';
-            inp_arr[16] = '<input type="text" name="ru_desc" value="' + text_arr[16] + '" class="form-control ru_desc">';
-            inp_arr[17] = '<input type="text" name="en_title" value="' + text_arr[17] + '" class="form-control en_title">';
-            inp_arr[18] = '<input type="text" name="en_desc" value="' + text_arr[18] + '" class="form-control en_desc">';
-            inp_arr[19] = '<input type="text" name="spa_title" value="' + text_arr[19] + '" class="form-control spa_title">';
-            inp_arr[20] = '<input type="text" name="spa_desc" value="' + text_arr[20] + '" class="form-control spa_desc">';
-            inp_arr[21] = '<input type="text" name="de_title" value="' + text_arr[21] + '" class="form-control de_title">';
-            inp_arr[22] = '<input type="text" name="de_desc" value="' + text_arr[22] + '" class="form-control de_desc">';
-            inp_arr[23] = '<input type="text" name="fr_title" value="' + text_arr[23] + '" class="form-control fr_title">';
-            inp_arr[24] = '<input type="text" name="fr_desc" value="' + text_arr[24] + '" class="form-control fr_desc">';
-            inp_arr[25] = '<input type="text" name="publisheds" value="' + text_arr[25] + '" class="form-control publisheds">';
-            inp_arr[26] = '<input type="text" name="unpublisheds" value="' + text_arr[26] + '" class="form-control unpublisheds">';
-            inp_arr[27] = '<input type="text" name="f_a_com_fixed_price" value="' + text_arr[27] + '" class="form-control f_a_com_fixed_price">';
-            inp_arr[28] = '<input type="text" name="f_a_am_fixed_price" value="' + text_arr[28] + '" class="form-control f_a_am_fixed_price">';
-            inp_arr[29] = '<input type="text" name="f_a_com_procent" value="' + text_arr[29] + '" class="form-control f_a_com_procent">';
-            inp_arr[30] = '<input type="text" name="f_a_am_procent" value="' + text_arr[30] + '" class="form-control f_a_am_procent">';
-            inp_arr[31] = '<input type="text" name="anahit_procent" value="' + text_arr[31] + '" class="form-control anahit_procent">';
-            inp_arr[32] = '<input type="text" name="high_price_partners_procent" value="' + text_arr[32] + '" class="form-control high_price_partners_procent">';
-            inp_arr[33] = '<input type="text" name="low_cost_partners_procent" value="' + text_arr[33] + '" class="form-control low_cost_partners_procent">';
-            inp_arr[34] = '<select class="ru_rod custom_class_width_th_small form-control" name="ru_rod">' +
+            inp_arr[12] = '<input type="text" name="prepare_time_1" value="' + text_arr[12] + '" class="form-control prepare_time_1">';
+            inp_arr[13] = '<input type="text" name="prepare_time_2" value="' + text_arr[13] + '" class="form-control prepare_time_2">';
+            inp_arr[14] = '<input type="time" name="design_time_1" value="' + text_arr[14] + '" class="form-control design_time_1">';
+            inp_arr[15] = '<input type="time" name="design_time_2" value="' + text_arr[15] + '" class="form-control design_time_2">';
+            inp_arr[16] = '<input type="text" name="am_title" value="' + text_arr[16] + '" class="form-control am_title">';
+            inp_arr[17] = '<input type="text" name="am_desc" value="' + text_arr[17] + '" class="form-control am_desc">';
+            inp_arr[18] = '<input type="text" name="ru_title" value="' + text_arr[18] + '" class="form-control ru_title">';
+            inp_arr[19] = '<input type="text" name="ru_desc" value="' + text_arr[19] + '" class="form-control ru_desc">';
+            inp_arr[20] = '<input type="text" name="en_title" value="' + text_arr[20] + '" class="form-control en_title">';
+            inp_arr[21] = '<input type="text" name="en_desc" value="' + text_arr[21] + '" class="form-control en_desc">';
+            inp_arr[22] = '<input type="text" name="spa_title" value="' + text_arr[22] + '" class="form-control spa_title">';
+            inp_arr[23] = '<input type="text" name="spa_desc" value="' + text_arr[23] + '" class="form-control spa_desc">';
+            inp_arr[24] = '<input type="text" name="de_title" value="' + text_arr[24] + '" class="form-control de_title">';
+            inp_arr[25] = '<input type="text" name="de_desc" value="' + text_arr[25] + '" class="form-control de_desc">';
+            inp_arr[26] = '<input type="text" name="fr_title" value="' + text_arr[26] + '" class="form-control fr_title">';
+            inp_arr[27] = '<input type="text" name="fr_desc" value="' + text_arr[27] + '" class="form-control fr_desc">';
+            inp_arr[28] = '<input type="text" name="publisheds" value="' + text_arr[28] + '" class="form-control publisheds">';
+            inp_arr[29] = '<input type="text" name="unpublisheds" value="' + text_arr[29] + '" class="form-control unpublisheds">';
+            inp_arr[30] = '<input type="text" name="f_a_com_fixed_price" value="' + text_arr[30] + '" class="form-control f_a_com_fixed_price">';
+            inp_arr[31] = '<input type="text" name="f_a_am_fixed_price" value="' + text_arr[31] + '" class="form-control f_a_am_fixed_price">';
+            inp_arr[32] = '<input type="text" name="f_a_com_procent" value="' + text_arr[32] + '" class="form-control f_a_com_procent">';
+            inp_arr[33] = '<input type="text" name="f_a_am_procent" value="' + text_arr[33] + '" class="form-control f_a_am_procent">';
+            inp_arr[34] = '<input type="text" name="anahit_procent" value="' + text_arr[34] + '" class="form-control anahit_procent">';
+            inp_arr[35] = '<input type="text" name="high_price_partners_procent" value="' + text_arr[35] + '" class="form-control high_price_partners_procent">';
+            inp_arr[36] = '<input type="text" name="low_cost_partners_procent" value="' + text_arr[36] + '" class="form-control low_cost_partners_procent">';
+            inp_arr[37] = '<select class="ru_rod custom_class_width_th_small form-control" name="ru_rod">' +
                 '<option value="1" class="ru_rod_1">Множественное число</option><option value="2" class="ru_rod_2">Мужской</option><option value="3" class="ru_rod_3">Женский</option><option value="4" class="ru_rod_4">Средний</option>'+
                 '</select>';
-            inp_arr[35] = '<select class="fr_rod custom_class_width_th_small form-control" name="fr_rod">' +
+            inp_arr[38] = '<select class="fr_rod custom_class_width_th_small form-control" name="fr_rod">' +
                 '<option value="1" class="fr_rod_1">Множественное число</option><option value="2" class="fr_rod_2">Мужской</option><option value="3" class="fr_rod_3">Женский</option><option value="4" class="fr_rod_4">Средний</option>'+
                 '</select>';
-            inp_arr[36] = '<select class="de_rod custom_class_width_th_small form-control" name="de_rod">' +
+            inp_arr[39] = '<select class="de_rod custom_class_width_th_small form-control" name="de_rod">' +
                 '<option value="1" class="de_rod_1">Множественное число</option><option value="2" class="de_rod_2">Мужской</option><option value="3" class="de_rod_3">Женский</option><option value="4" class="de_rod_4">Средний</option>'+
                 '</select>';
-            inp_arr[37] = '<input type="text" name="atg_code" value="' + text_arr[37] + '" class="form-control atg_code">';
+            inp_arr[40] = '<input type="text" name="atg_code" value="' + text_arr[40] + '" class="form-control atg_code">';
 
-            for (i = 0; i < 38; i++) {
+            for (i = 0; i < 41; i++) {
                 this_tr.find('td').eq(i + 1).html(inp_arr[i])
             }
-            var dependet_from_price_class = text_arr[6] === 'Yes' ? 'Yes' : 'No';
+            var dependet_from_price_class = text_arr[9] === 'Yes' ? 'Yes' : 'No';
             this_tr.find('.depended_from_price .depended_from_price_' + dependet_from_price_class).attr('selected', 'selected');
-            var everytime_available_class = text_arr[8] === 'Yes' ? 'Yes' : 'No';
+            var everytime_available_class = text_arr[11] === 'Yes' ? 'Yes' : 'No';
             this_tr.find('.everytime_available .everytime_available_' + everytime_available_class).attr('selected', 'selected');
-            this_tr.find('.ru_rod .ru_rod_' + text_arr[34]).attr('selected', 'selected');
-            this_tr.find('.fr_rod .fr_rod_' + text_arr[35]).attr('selected', 'selected');
-            this_tr.find('.de_rod .de_rod_' + text_arr[36]).attr('selected', 'selected');
+            this_tr.find('.ru_rod .ru_rod_' + text_arr[37]).attr('selected', 'selected');
+            this_tr.find('.fr_rod .fr_rod_' + text_arr[38]).attr('selected', 'selected');
+            this_tr.find('.de_rod .de_rod_' + text_arr[39]).attr('selected', 'selected');
             showSaveCancelButtons(this_tr);
             restartValidate();
         });
@@ -1026,6 +1047,9 @@ function addToTotalPricesStockTable($product_id,$outcount){
             var high_price_partners_procent = this_tr.find('td').find($(".high_price_partners_procent")).val();
             var low_cost_partners_procent = this_tr.find('td').find($(".low_cost_partners_procent")).val();
             var title_emoji = this_tr.find('td').find($(".title_emoji")).val();
+            var arm_responsible = this_tr.find('td').find($(".arm_responsible")).val();
+            var rus_responsible = this_tr.find('td').find($(".rus_responsible")).val();
+            var en_responsible = this_tr.find('td').find($(".en_responsible")).val();
             var brand_name = this_tr.find('td').find($(".brand_name")).val();
             var title_keyword = this_tr.find('td').find($(".title_keyword")).val();
             var depended_from_price = this_tr.find('td').find($(".depended_from_price")).val();
@@ -1075,6 +1099,9 @@ function addToTotalPricesStockTable($product_id,$outcount){
                 high_price_partners_procent: high_price_partners_procent,
                 low_cost_partners_procent: low_cost_partners_procent,
                 title_emoji: title_emoji,
+                arm_responsible: arm_responsible,
+                rus_responsible: rus_responsible,
+                en_responsible: en_responsible,
                 brand_name: brand_name,
                 title_keyword: title_keyword
             };
@@ -1084,44 +1111,47 @@ function addToTotalPricesStockTable($product_id,$outcount){
                 data: data,
                 success: function (result) {
                     this_tr.find('td').eq(1).text(sku_code);
-                    this_tr.find('td').eq(2).text(brand_name);
-                    this_tr.find('td').eq(3).text(title_keyword);
-                    this_tr.find('td').eq(4).text(title_emoji);
-                    this_tr.find('td').eq(5).text(quantity);
-                    this_tr.find('td').eq(6).empty();
-                    this_tr.find('td').eq(6).append("<img src='../../template/images/sku_images/" + icon_images_new + "' style='height:40px;'><span style='display:none'>" + icon_images_new + "</span>");
-                    this_tr.find('td').eq(7).text(depended_from_price);
-                    this_tr.find('td').eq(8).text(dependent_price);
-                    this_tr.find('td').eq(9).text(everytime_available);
-                    this_tr.find('td').eq(10).text(prepare_time_1);
-                    this_tr.find('td').eq(11).text(prepare_time_2);
-                    this_tr.find('td').eq(12).text(design_time_1);
-                    this_tr.find('td').eq(13).text(design_time_2);
-                    this_tr.find('td').eq(14).text(am_title);
-                    this_tr.find('td').eq(15).text(am_desc);
-                    this_tr.find('td').eq(16).text(ru_title);
-                    this_tr.find('td').eq(17).text(ru_desc);
-                    this_tr.find('td').eq(18).text(en_title);
-                    this_tr.find('td').eq(19).text(en_desc);
-                    this_tr.find('td').eq(20).text(spa_title);
-                    this_tr.find('td').eq(21).text(spa_desc);
-                    this_tr.find('td').eq(22).text(de_title);
-                    this_tr.find('td').eq(23).text(de_desc);
-                    this_tr.find('td').eq(24).text(fr_title);
-                    this_tr.find('td').eq(25).text(fr_desc);
-                    this_tr.find('td').eq(26).text(publisheds);
-                    this_tr.find('td').eq(27).text(unpublisheds);
-                    this_tr.find('td').eq(28).text(f_a_com_fixed_price);
-                    this_tr.find('td').eq(29).text(f_a_am_fixed_price);
-                    this_tr.find('td').eq(30).text(f_a_com_procent);
-                    this_tr.find('td').eq(31).text(f_a_am_procent);
-                    this_tr.find('td').eq(32).text(anahit_procent);
-                    this_tr.find('td').eq(33).text(high_price_partners_procent);
-                    this_tr.find('td').eq(34).text(low_cost_partners_procent);
-                    this_tr.find('td').eq(35).text(array_rod[ru_rod]);
-                    this_tr.find('td').eq(36).text(array_rod[fr_rod]);
-                    this_tr.find('td').eq(37).text(array_rod[de_rod]);
-                    this_tr.find('td').eq(38).text(atg_code);
+                    this_tr.find('td').eq(2).text(arm_responsible);
+                    this_tr.find('td').eq(3).text(rus_responsible);
+                    this_tr.find('td').eq(4).text(en_responsible);
+                    this_tr.find('td').eq(5).text(brand_name);
+                    this_tr.find('td').eq(6).text(title_keyword);
+                    this_tr.find('td').eq(7).text(title_emoji);
+                    this_tr.find('td').eq(8).text(quantity);
+                    this_tr.find('td').eq(9).empty();
+                    this_tr.find('td').eq(10).append("<img src='../../template/images/sku_images/" + icon_images_new + "' style='height:40px;'><span style='display:none'>" + icon_images_new + "</span>");
+                    this_tr.find('td').eq(11).text(depended_from_price);
+                    this_tr.find('td').eq(12).text(dependent_price);
+                    this_tr.find('td').eq(13).text(everytime_available);
+                    this_tr.find('td').eq(14).text(prepare_time_1);
+                    this_tr.find('td').eq(15).text(prepare_time_2);
+                    this_tr.find('td').eq(16).text(design_time_1);
+                    this_tr.find('td').eq(17).text(design_time_2);
+                    this_tr.find('td').eq(18).text(am_title);
+                    this_tr.find('td').eq(19).text(am_desc);
+                    this_tr.find('td').eq(20).text(ru_title);
+                    this_tr.find('td').eq(21).text(ru_desc);
+                    this_tr.find('td').eq(22).text(en_title);
+                    this_tr.find('td').eq(23).text(en_desc);
+                    this_tr.find('td').eq(24).text(spa_title);
+                    this_tr.find('td').eq(25).text(spa_desc);
+                    this_tr.find('td').eq(26).text(de_title);
+                    this_tr.find('td').eq(27).text(de_desc);
+                    this_tr.find('td').eq(28).text(fr_title);
+                    this_tr.find('td').eq(29).text(fr_desc);
+                    this_tr.find('td').eq(30).text(publisheds);
+                    this_tr.find('td').eq(31).text(unpublisheds);
+                    this_tr.find('td').eq(32).text(f_a_com_fixed_price);
+                    this_tr.find('td').eq(33).text(f_a_am_fixed_price);
+                    this_tr.find('td').eq(34).text(f_a_com_procent);
+                    this_tr.find('td').eq(35).text(f_a_am_procent);
+                    this_tr.find('td').eq(36).text(anahit_procent);
+                    this_tr.find('td').eq(37).text(high_price_partners_procent);
+                    this_tr.find('td').eq(38).text(low_cost_partners_procent);
+                    this_tr.find('td').eq(39).text(array_rod[ru_rod]);
+                    this_tr.find('td').eq(40).text(array_rod[fr_rod]);
+                    this_tr.find('td').eq(41).text(array_rod[de_rod]);
+                    this_tr.find('td').eq(42).text(atg_code);
                     hideSaveCancelButtons(this_tr)
                 }
             });

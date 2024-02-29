@@ -247,9 +247,9 @@ $open_deliver_driver = GetOffOnAction('open_deliver_driver');
 						}
 					?>
 					<?php
-						if($userInfo[0]['id'] == 4 || $open_sku_code_page_control == 1){
+						if($userInfo[0]['id'] == 4 || $userInfo[0]['id'] == 38 || $open_sku_code_page_control == 1){
 						?>
-							<a href="sku_add.php" target='_blank' class="btn btn-default">ADD SKU <span class="glyphicon glyphicon-link" aria-hidden="true"></a>
+							<a href="sku_editor.php" target='_blank' class="btn btn-default">SKU editor <span class="glyphicon glyphicon-link" aria-hidden="true"></a>
 						<?php
 						}
 					?>

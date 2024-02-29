@@ -97,6 +97,13 @@ if(isset($_REQUEST['get_stock_default_prods']) && $_REQUEST['get_stock_default_p
     print json_encode($accounted_products);die;
 }
 //
+$delivery_statuses = getwayConnect::getwayData("SELECT * FROM `delivery_status`");
+$delivery_sourcees = getwayConnect::getwayData("SELECT * FROM `delivery_source`");
+$delivery_paymentes = getwayConnect::getwayData("SELECT * FROM `delivery_payment`");
+$delivery_reasones = getwayConnect::getwayData("SELECT * FROM `delivery_reason`");
+$delivery_languagees = getwayConnect::getwayData("SELECT * FROM `delivery_language`");
+$drivers_data_first = getwayConnect::getwayData("SELECT * FROM `delivery_deliverer` where active = 1 ORDER BY `ordering` ASC");
+$organisationTypes = getwayConnect::getwayData("SELECT * FROM organisation_types where active = 1");
 
 function addEditImage($images_data,$order_id, $productdesc, $productprice, $producttaxid, $productquantity, $productamdprice){
 	//image_id
@@ -290,6 +297,7 @@ if(!$access){
 }
 $organisation = null;
 if(isset($orderData[0]) && isset($orderData[0]['organisation'])){
+	//var_dump($orderData[0]['organisation']);
 	$organisation = getwayConnect::getwayData("SELECT * from organisations where id = '{$orderData[0]['organisation']}'");
 	if(isset($organisation) && !empty($organisation)){
 		$organisation = $organisation[0];
@@ -465,6 +473,9 @@ if(isset($_REQUEST["insert_order"]))
 				$value = checkaddslashes($value);
 				if($key == 'bonus_info'){
 					$value = trim($value);
+				}
+				if($key == 'organisation'){
+					$value = trim($value) ? trim($value) : 0;
 				}
 				$actionQuery .= "{$key} = '{$value}', ";
 			} 
@@ -772,6 +783,12 @@ if(isset($_REQUEST["insert_order"]))
 				if($key == 'bonus_info'){
 					$value = trim($value);
 				}
+				if($key == 'organisation'){
+					$value = trim($value) ? trim($value) : 0;
+				}
+				if($key == 'second_connect'){
+					$value = trim($value) ? trim($value) : 0;
+				}
 				$actionQuery .= " {$key} = '{$value}', ";
 			} 
 		}
@@ -906,7 +923,7 @@ if(isset($_REQUEST["insert_order"]))
 					$log = true;
 					$html_log_for_update_order.= '<br> Receiver Subregion: <span style="color:blue"> ' . $orderOldInfo[0]['receiver_subregion'] .  ' </span> <span style="color:red">-></span> <span style="color:#4F6228"><b> ' . $_REQUEST['receiver_subregion']. '</b></span>';
 				}
-				if ( $_REQUEST['organisation'] != $orderOldInfo[0]['organisation']){
+				if ( !empty($_REQUEST['organisation']) && $_REQUEST['organisation'] != $orderOldInfo[0]['organisation']){
 					$NewOrganisation = getwayConnect::getwayData("SELECT * FROM `organisations` WHERE `id` = '{$_REQUEST["organisation"]}'");
 					$OldOrganisation = getwayConnect::getwayData("SELECT * FROM `organisations` WHERE `id` = '{$orderOldInfo[0]['organisation']}'");
 					$log = true;
@@ -1296,6 +1313,8 @@ if(isset($_REQUEST["insert_order"]))
 					}
 				}
 				$greetings_card_type = getwayConnect::getwayData("SELECT * FROM `order_notes_types` WHERE `type` = 'greetings_card'");
+				// print "<pre>";
+				// var_dump($greetings_card_type);die;
 				$greetings_card_row = getwayConnect::getwayData("SELECT * FROM `order_notes` WHERE `type_id` = '{$greetings_card_type[0]['id']}' and order_id = '{$_REQUEST["id"]}'");
 				$controller_note_type = getwayConnect::getwayData("SELECT * FROM `order_notes_types` WHERE `type` = 'controller_note'");
 				$controller_note_row = getwayConnect::getwayData("SELECT * FROM `order_notes` WHERE `type_id` = '{$controller_note_type[0]['id']}' and order_id = '{$_REQUEST["id"]}'");
@@ -1401,7 +1420,8 @@ if(isset($_REQUEST["insert_order"]))
 				getwayConnect::getwaySend("INSERT INTO tax_numbers_of_check (hdm_tax,hvhh_tax, order_id,postcard_amd_price,delivery_static_price,delivery_other_price) VALUES ('{$hdm_tax}','{$_REQUEST['hvhh_tax']}' ,'{$id}','{$_REQUEST['postcard_amd_price']}','{$delivery_static_price}','{$delivery_other_price}')");
 			}
 			// end asop52f41v78x8z5
-			if(getwayConnect::getwaySend("UPDATE rg_orders SET {$actionQuery} WHERE id='{$id}'"))
+			$checkQuery  = getwayConnect::getwaySend("UPDATE rg_orders SET {$actionQuery} WHERE id='{$id}'");
+			if($checkQuery)
 			{
 				// Added By Hrach08/12/19
 				$operator_info = getwayConnect::getwayData("SELECT * FROM `user` WHERE `username` = '{$_REQUEST["operator"]}'");
@@ -1559,7 +1579,6 @@ if(isset($_REQUEST["insert_order"]))
 		echo json_encode($organisations);
 		exit;
 	}
-
 if(isset($_REQUEST['get_street_delivery_price'])){
 	$query = "SELECT delivery_price FROM delivery_street where code = '" . $_REQUEST['street'] . "'";
 	$results = getwayConnect::getwayData($query);
@@ -1643,7 +1662,8 @@ if(isset($_REQUEST['other_orders'])){
 	}
 	$query = rtrim($query, 'OR');
 	$query .= " )";
-	$query .= " GROUP BY rg_orders.id ORDER BY rg_orders.id DESC";
+	// $query .= " GROUP BY rg_orders.id ORDER BY rg_orders.id DESC";
+	$query .= " ORDER BY rg_orders.id DESC";
 	$results = getwayConnect::getwayData($query);
 	foreach($results as $key => $value){
 		$relateds = getwayConnect::getwayData("SELECT * FROM order_related_products where order_id='{$value['id']}'");
@@ -2009,7 +2029,10 @@ if(isset($_REQUEST['orderId'])){
 	$loged_operator_info = getwayConnect::getwayData("SELECT * FROM `user` WHERE `username` = '{$operator}'");
 	if(isset($_GET['orderId'])){
 	    if(!isset($_COOKIE['openOperatorOrderId_'.$_REQUEST['orderId']])){
-			$orderInfo = getwayConnect::getwayData("SELECT * FROM `rg_orders` WHERE `id` = '{$_REQUEST['orderId']}'");
+	    	//print "<pre>";
+	    	//var_dump(getwayConnect::$db);
+			$orderInfo = getwayConnect::getwayData("SELECT * FROM `rg_orders` WHERE `id` = " . $_REQUEST['orderId']);
+	    	//var_dump($orderInfo);die;
 			$date1 = new DateTime();
 			$date2 = new DateTime();
 			$diff = $date1->diff($date2);
@@ -2454,7 +2477,7 @@ if(isset($_REQUEST['orderId'])){
 			exit;
 		}else if($actioned == 4){
 			echo "<script>alert(\"FAIL TO SAVE\");</script>";
-			echo "<script>window.location.replace(\"order.php?orderId={$_REQUEST["orderId"]}\");</script>";
+			// echo "<script>window.location.replace(\"order.php?orderId={$_REQUEST["orderId"]}\");</script>";
 			exit;
 		}
 		?>
@@ -2574,15 +2597,7 @@ if(isset($_REQUEST['orderId'])){
 	<?php 
 	//if($operator != $edOperator["o"]){
 		//$edOperatorInfo = getwayConnect::getwayData("SELECT full_name_am FROM user where username = '" . $edOperator["o"] . "'");
-		?><!-- 
-			<div align="center" style="margin:5px;font-size:20px">
-				<img src="<?=$rootF?>/template/icons/editing.png"/>
-				<?=(defined('EDITOR_AT_THE_MOMENT')) ?  EDITOR_AT_THE_MOMENT : 'EDITOR_AT_THE_MOMENT';?>՝ 
-				<strong style="color:red;display:none" id="editorOperator"> <?=ucfirst($edOperator["o"]);?>
-				</strong>
-				<strong style="color:red;"> <?=ucfirst($edOperatorInfo[0]['full_name_am']);?>
-				</strong>
-			</div> -->
+		?>
 	<?php 
 		//}
 	}?>
@@ -2624,7 +2639,7 @@ if(isset($_REQUEST['orderId'])){
                         <select onclick="" name="delivery_time" class="form-control" id="delivery_time" style="width: 100px; float: left;padding:0px">
                                 <option value=""><?=(defined('SELECT_FROM_LIST')) ?  SELECT_FROM_LIST : 'SELECT_FROM_LIST';?>:</option>
                                 <?php
-								$active = (isset($orderData[0]["delivery_time"])) ? $orderData[0]["delivery_time"] : false;
+								$active = (isset($orderData[0]["delivery_time"])) ? $orderData[0]["delivery_time"] : 0;
 								echo page::buildOptions("delivery_time",$active);
 								?>
                             </select>
@@ -2664,10 +2679,8 @@ if(isset($_REQUEST['orderId'])){
 
 
 
-
-
 						<?php 
-						$active = (isset($orderData[0]["sell_point"])) ? $orderData[0]["sell_point"] : false;
+						$active = (isset($orderData[0]["sell_point"])) ? $orderData[0]["sell_point"] : 0;
 									$relatedpartners = page::buildRelatedOptions('`data_partners`',
 									'`delivery_sellpoint`',
 									$active,
@@ -2676,6 +2689,13 @@ if(isset($_REQUEST['orderId'])){
 									"WHERE `data_partners`.`depend_on` = (SELECT `depend_on` FROM `data_partners` WHERE `sell_point_id` = {$active} LIMIT 1) AND `data_partners`.`active` = 1"
 									);
 					?>
+						<?php
+						// var_dump(getwayConnect::$db);
+						// 	$delivery_statuses = getwayConnect::getwayData("SELECT * FROM `delivery_status`");
+						// 	print "<pre>";
+						// 	var_dump($delivery_statuses);die;
+
+						?>
                     <tr>
                         <td><label><?=(defined('SALE_POINT'))? SALE_POINT :'SALE_POINT';?>:* </label></td>
                         <td>
@@ -2740,7 +2760,7 @@ if(isset($_REQUEST['orderId'])){
                         <td><select name="delivery_region" id="b_region" class="form-control required delivery_region" onchange="buildRegions(1,this,<?=(isset($orderData[0]["delivery_region"])) ? $orderData[0]["delivery_region"] : "null"?>)" required>
                                 <option value=""><?=(defined('SELECT_FROM_LIST')) ?  SELECT_FROM_LIST : 'SELECT_FROM_LIST';?>:</option>
 								<?php
-									$active = (isset($orderData[0]["delivery_region"])) ? $orderData[0]["delivery_region"] : false;
+									$active = (isset($orderData[0]["delivery_region"])) ? $orderData[0]["delivery_region"] : 0;
 									echo page::buildOptions("delivery_region",$active);
 								?>
                             </select>
@@ -3026,7 +3046,7 @@ if(isset($_REQUEST['orderId'])){
                             <select name="currency" id="currency" class="form-control required customFormControl" style="width:75px; float:left; display:inline-block" required>
                                 <option value=""><?=(defined('SELECT_FROM_LIST')) ?  SELECT_FROM_LIST : 'SELECT_FROM_LIST';?>:</option>
 								<?php
-									$active = (isset($orderData[0]["currency"])) ? $orderData[0]["currency"] : false;
+									$active = (isset($orderData[0]["currency"])) ? $orderData[0]["currency"] : 0;
 									
 									echo page::buildOptions("currency",$active);
 								?>
@@ -3122,7 +3142,6 @@ if(isset($_REQUEST['orderId'])){
 								<option value=""><?=(defined('SELECT_FROM_LIST')) ?  SELECT_FROM_LIST : 'SELECT_FROM_LIST';?>:</option>
 								<?php 
 
-									$organisationTypes = getwayConnect::getwayData("SELECT * FROM organisation_types where active = 1");
 									foreach($organisationTypes as $organisationType){
 										echo "<option value='".$organisationType['id'] ."'";
 										if(isset($organisation) && !empty($organisation) && $organisation['type'] == $organisationType['id']){
@@ -3215,10 +3234,9 @@ if(isset($_REQUEST['orderId'])){
 	                    	<select name="deliverer" id="deliverer" class="form-control" onchange="select_delivery_type($(this))" required>
                                 <option value=""><?=(defined('SELECT_FROM_LIST')) ?  SELECT_FROM_LIST : 'SELECT_FROM_LIST';?>:</option>
 								<?php
-									$active = (isset($orderData[0]["deliverer"])) ? $orderData[0]["deliverer"] : false;
-					
-									if($drivers_data = getwayConnect::getwayData("SELECT * FROM `delivery_deliverer` where active = 1 ORDER BY `ordering` ASC",PDO::FETCH_ASSOC)){
-										foreach ($drivers_data as $dkey => $dvalue) {
+									$active = (isset($orderData[0]["deliverer"])) ? $orderData[0]["deliverer"] : 0;
+									if($drivers_data_first){
+										foreach ($drivers_data_first as $dkey => $dvalue) {
 											$selected = ($dvalue['id'] == $active) ? "selected" : '';
 											if($dvalue['id'] >= 20){
 												echo "<option value=\"{$dvalue['id']}\" data-car=\"{$dvalue['delivery_type_id']}\" {$selected}>{$dvalue['name']}</option>";
@@ -3238,7 +3256,7 @@ if(isset($_REQUEST['orderId'])){
                         <td>
 
                             <?php
-                            $active = (isset($orderData[0]["delivery_type"])) ?$orderData[0]["delivery_type"] : false;
+                            $active = (isset($orderData[0]["delivery_type"])) ?$orderData[0]["delivery_type"] : 0;
 
                             if($drivers_data = getwayConnect::getwayData("SELECT * FROM `delivery_drivers` WHERE `active` = 1 ORDER BY `ordering` ASC",PDO::FETCH_ASSOC)){
                                 $type_is_2 = false;
@@ -3283,11 +3301,13 @@ if(isset($_REQUEST['orderId'])){
 							<?php
 								$delivererArray = Array(12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42);
 								$imgIcon;
-								if(in_array($orderData[0]['deliverer'], $delivererArray)){
+								if(isset($_REQUEST['orderId']) && in_array($orderData[0]['deliverer'], $delivererArray)){
 									$imgIcon = $orderData[0]['deliverer'];
 								}
 								else{
-									$imgIcon = $orderData[0]['delivery_type'];
+									if(isset($_REQUEST['orderId'])){
+										$imgIcon = $orderData[0]['delivery_type'];
+									}
 								}
 							?>
 							<img width="70px" style='margin-bottom:20px' src="<?=$rootF?>/template/icons/deliver/<?php echo $imgIcon ?>.png">
@@ -3298,7 +3318,7 @@ if(isset($_REQUEST['orderId'])){
 									}
 								}
 							?>
-							<input <?php echo ($type_is_2)? 'name="add_delivery_price"' : 'name=""' ?> value="<?php echo (!empty($additional_delivery_prices))? $additional_delivery_prices[0]['price'] : '' ?>" type='number' style='float:right;margin-top:20px' class="<?php echo ($type_is_2)? '' : 'display-none'?> additionalPriceDelivery" placeholder='Առաքման արժեք'>
+							<input <?php echo (isset($_REQUEST['orderId']) && $type_is_2)? 'name="add_delivery_price"' : 'name=""' ?> value="<?php echo (!empty($additional_delivery_prices))? $additional_delivery_prices[0]['price'] : '' ?>" type='number' style='float:right;margin-top:20px' class="<?php echo ($type_is_2)? '' : 'display-none'?> additionalPriceDelivery" placeholder='Առաքման արժեք'>
 						</td>
 					</tr>
 					</tbody>
@@ -3317,25 +3337,28 @@ if(isset($_REQUEST['orderId'])){
                         <td><select style='max-width: 156px; float:left; display:inline-block' name="delivery_status" id="delivery_status" class="form-control required" required>
                                 <option value=""><?=(defined('SELECT_FROM_LIST')) ?  SELECT_FROM_LIST : 'SELECT_FROM_LIST';?>:</option>
                                 <?php
-					$active = (isset($orderData[0]["delivery_status"])) ? $orderData[0]["delivery_status"] : false;
-					echo page::buildOptions("delivery_status",$active);
-				?>
+									foreach($delivery_statuses as $status){
+										?>
+											<option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["delivery_status"] == $status['id'])? 'selected' : ''  ?> value="<?php echo $status['id'] ?>"><?php echo $status['name_am'] ?></option>
+										<?php
+									}
+								?>
                             </select>
-                            <select <?php echo ($orderData[0]["delivery_status"] == 3)? 'disabled' : ''  ?> style='max-width: 120px; float:left; display:inline-block' name="who_received" id="who_received" class="form-control">
-                                <option <?php echo ($orderData[0]["who_received"] == '')? 'selected' : ''  ?> value="">Ստացող:</option>
-                                <option <?php echo ($orderData[0]["who_received"] == 'andzamb')? 'selected' : '' ?> value="andzamb">Անձամբ</option>
-                                <option <?php echo ($orderData[0]["who_received"] == 'mayr')? 'selected' : '' ?> value="mayr">Մայրը</option>
-                                <option <?php echo ($orderData[0]["who_received"] == 'hayr')? 'selected' : '' ?> value="hayr">Հայրը</option>
-                                <option <?php echo ($orderData[0]["who_received"] == 'quyr')? 'selected' : '' ?> value="quyr">Քույրը</option>
-                                <option <?php echo ($orderData[0]["who_received"] == 'exbayr')? 'selected' : '' ?> value="exbayr">Եղբայրը</option>
-                                <option <?php echo ($orderData[0]["who_received"] == 'kin')? 'selected' : '' ?> value="kin">Կինը</option>
-                                <option <?php echo ($orderData[0]["who_received"] == 'amusin')? 'selected' : '' ?> value="amusin">Ամուսինը</option>
-                                <option <?php echo ($orderData[0]["who_received"] == 'erexan')? 'selected' : '' ?> value="erexan">Երեխան</option>
-                                <option <?php echo ($orderData[0]["who_received"] == 'harevan')? 'selected' : '' ?> value="harevan">Հարևան</option>
-                                <option <?php echo ($orderData[0]["who_received"] == 'barekam')? 'selected' : '' ?> value="barekam">Բարեկամ</option>
-                                <option <?php echo ($orderData[0]["who_received"] == 'tatik')? 'selected' : '' ?> value="tatik">Տատիկ</option>
-                                <option <?php echo ($orderData[0]["who_received"] == 'papik')? 'selected' : '' ?> value="papik">Պապիկ</option>
-                                <option <?php echo ($orderData[0]["who_received"] == 'ayl')? 'selected' : '' ?> value="ayl">Այլ</option>
+                            <select <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["delivery_status"] == 3)? 'disabled' : ''  ?> style='max-width: 120px; float:left; display:inline-block' name="who_received" id="who_received" class="form-control">
+                                <option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["who_received"] == '')? 'selected' : ''  ?> value="">Ստացող:</option>
+                                <option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["who_received"] == 'andzamb')? 'selected' : '' ?> value="andzamb">Անձամբ</option>
+                                <option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["who_received"] == 'mayr')? 'selected' : '' ?> value="mayr">Մայրը</option>
+                                <option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["who_received"] == 'hayr')? 'selected' : '' ?> value="hayr">Հայրը</option>
+                                <option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["who_received"] == 'quyr')? 'selected' : '' ?> value="quyr">Քույրը</option>
+                                <option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["who_received"] == 'exbayr')? 'selected' : '' ?> value="exbayr">Եղբայրը</option>
+                                <option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["who_received"] == 'kin')? 'selected' : '' ?> value="kin">Կինը</option>
+                                <option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["who_received"] == 'amusin')? 'selected' : '' ?> value="amusin">Ամուսինը</option>
+                                <option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["who_received"] == 'erexan')? 'selected' : '' ?> value="erexan">Երեխան</option>
+                                <option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["who_received"] == 'harevan')? 'selected' : '' ?> value="harevan">Հարևան</option>
+                                <option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["who_received"] == 'barekam')? 'selected' : '' ?> value="barekam">Բարեկամ</option>
+                                <option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["who_received"] == 'tatik')? 'selected' : '' ?> value="tatik">Տատիկ</option>
+                                <option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["who_received"] == 'papik')? 'selected' : '' ?> value="papik">Պապիկ</option>
+                                <option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["who_received"] == 'ayl')? 'selected' : '' ?> value="ayl">Այլ</option>
                             </select>
                             <input type='hidden' name='old_status_of_order' value="<?=$orderData[0]['delivery_status']?>">
                             <input type='hidden' class='delivery_at_driver' value="<?=$orderData[0]['delivered_at']?>">
@@ -3346,9 +3369,9 @@ if(isset($_REQUEST['orderId'])){
                         <td><select name="order_source" id="order_source" class="form-control required" required>
                                 <option value=""><?=(defined('SELECT_FROM_LIST')) ?  SELECT_FROM_LIST : 'SELECT_FROM_LIST';?>:</option>
                                 <?php
-					$active = (isset($orderData[0]["order_source"])) ? $orderData[0]["order_source"] : false;
-					echo page::buildOptionsByOrdering("delivery_source",$active,false, false,true, '');
-				?>
+									$active = (isset($orderData[0]["order_source"])) ? $orderData[0]["order_source"] : 0;
+									echo page::buildOptionsByOrdering("delivery_source",$active,false, false,true, '');
+								?>
                             </select>
                         </td>
                     </tr>
@@ -3368,8 +3391,11 @@ if(isset($_REQUEST['orderId'])){
                         <td><select name="payment_type" id="payment_type" class="form-control required">
                                 <option value=""><?=(defined('SELECT_FROM_LIST')) ?  SELECT_FROM_LIST : 'SELECT_FROM_LIST';?>:</option>
                                 <?php
-									$active = (isset($orderData[0]["payment_type"])) ? $orderData[0]["payment_type"] : false;
-									echo page::buildOptionsByOrdering("delivery_payment",$active, false, false,true, '');
+									foreach($delivery_paymentes as $payment){
+										?>
+											<option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["payment_type"] == $payment['id'])? 'selected' : ''  ?> value="<?php echo $payment['id'] ?>"><?php echo $payment['name_am'] ?></option>
+										<?php
+									}
 								?>
                             </select>
                         </td>
@@ -3407,54 +3433,48 @@ if(isset($_REQUEST['orderId'])){
                         <td>
 							<select name="first_connect" id="first_connect" class="form-control" style="max-width: 116px; float:left; display:inline-block">
                                 <option value="">Առաջին:</option>
-                                <option <?php echo($orderData[0]["first_connect"] == '13')? 'selected' : '' ?> value="13">Viber</option>
-                                <option <?php echo($orderData[0]["first_connect"] == '14')? 'selected' : '' ?> value="14">WhatsApp</option>
-                                <option <?php echo($orderData[0]["first_connect"] == '11' )? 'selected' : ''?> value="11">Phone</option>
-                                <option <?php echo($orderData[0]["first_connect"] == '2' )? 'selected' : ''?> value="2">Live Chat</option>
-                                <option <?php echo($orderData[0]["first_connect"] == '3')? 'selected' : '' ?> value="3">Skype</option>
-                                <option <?php echo($orderData[0]["first_connect"] == '10')? 'selected' : '' ?> value="10">Email</option>
-                                <option <?php echo($orderData[0]["first_connect"] == '18')? 'selected' : '' ?> value="18">Telegram</option>
+                                <option <?php echo(isset($_REQUEST['orderId']) && $orderData[0]["first_connect"] == '13')? 'selected' : '' ?> value="13">Viber</option>
+                                <option <?php echo(isset($_REQUEST['orderId']) && $orderData[0]["first_connect"] == '14')? 'selected' : '' ?> value="14">WhatsApp</option>
+                                <option <?php echo(isset($_REQUEST['orderId']) && $orderData[0]["first_connect"] == '11' )? 'selected' : ''?> value="11">Phone</option>
+                                <option <?php echo(isset($_REQUEST['orderId']) && $orderData[0]["first_connect"] == '2' )? 'selected' : ''?> value="2">Live Chat</option>
+                                <option <?php echo(isset($_REQUEST['orderId']) && $orderData[0]["first_connect"] == '3')? 'selected' : '' ?> value="3">Skype</option>
+                                <option <?php echo(isset($_REQUEST['orderId']) && $orderData[0]["first_connect"] == '10')? 'selected' : '' ?> value="10">Email</option>
+                                <option <?php echo(isset($_REQUEST['orderId']) && $orderData[0]["first_connect"] == '18')? 'selected' : '' ?> value="18">Telegram</option>
                             </select>
 							<select name="second_connect" id="second_connect" class="form-control" style="max-width: 116px; float:left; display:inline-block">
                                 <option value="">Երկրորդ:</option>
-                                <option <?php echo($orderData[0]["second_connect"] == '13')? 'selected' : '' ?> value="13">Viber</option>
-                                <option <?php echo($orderData[0]["second_connect"] == '14')? 'selected' : '' ?> value="14">WhatsApp</option>
-                                <option <?php echo($orderData[0]["second_connect"] == '11' )? 'selected' : ''?> value="11">Phone</option>
-                                <option <?php echo($orderData[0]["second_connect"] == '2' )? 'selected' : ''?> value="2">Live Chat</option>
-                                <option <?php echo($orderData[0]["second_connect"] == '3')? 'selected' : '' ?> value="3">Skype</option>
-                                <option <?php echo($orderData[0]["second_connect"] == '10')? 'selected' : '' ?> value="10">Email</option>
-                                <option <?php echo($orderData[0]["second_connect"] == '18')? 'selected' : '' ?> value="18">Telegram</option>
+                                <option <?php echo( isset($_REQUEST['orderId']) && $orderData[0]["second_connect"] == '13')? 'selected' : '' ?> value="13">Viber</option>
+                                <option <?php echo( isset($_REQUEST['orderId']) && $orderData[0]["second_connect"] == '14')? 'selected' : '' ?> value="14">WhatsApp</option>
+                                <option <?php echo( isset($_REQUEST['orderId']) && $orderData[0]["second_connect"] == '11' )? 'selected' : ''?> value="11">Phone</option>
+                                <option <?php echo( isset($_REQUEST['orderId']) && $orderData[0]["second_connect"] == '2' )? 'selected' : ''?> value="2">Live Chat</option>
+                                <option <?php echo( isset($_REQUEST['orderId']) && $orderData[0]["second_connect"] == '3')? 'selected' : '' ?> value="3">Skype</option>
+                                <option <?php echo( isset($_REQUEST['orderId']) && $orderData[0]["second_connect"] == '10')? 'selected' : '' ?> value="10">Email</option>
+                                <option <?php echo( isset($_REQUEST['orderId']) && $orderData[0]["second_connect"] == '18')? 'selected' : '' ?> value="18">Telegram</option>
                             </select>
                         </td>
                     </tr>
-                    <?php
-                    	if($userData[0]['id'] != '38'){
-                    		?>
-                    			 <tr>
-			                        <td>
-										<label>Բոնուս / Մալուս։</label>
-									</td>
-			                        <td>
-										<div style='margin-bottom:10px'>
-											<?php if (empty(array_intersect(array(89),explode(',',$level[0]["user_level"]))) || in_array(99,explode(',',$level[0]["user_level"]))) { ?>
-									        <label class="btn btn-primary" style='float:left;margin-right:2px'><input <?php echo ($orderData[0]["bonus_type"] == 2 && $orderData[0]["disadvantage_status"] == 1)? 'disabled':'' ?> type="radio" name="bonus_type" value="1" id="option1" <?=(isset($orderData[0]["bonus_type"]) && $orderData[0]["bonus_type"] == 1) ? "checked" : ""?> onclick="addAttrb(); showBonusInfo()"><?=(defined('BONUS')) ?  BONUS : 'BONUS';?></label>
-									        <label class="btn btn-danger"><input <?php echo ($orderData[0]["bonus_type"] == 2 && $orderData[0]["disadvantage_status"] == 1)? 'disabled':'' ?> type="radio" name="bonus_type" value="2" id="option2" <?=(isset($orderData[0]["bonus_type"]) && $orderData[0]["bonus_type"] == 2) ? "checked" : ""?> onclick="removeAttrb(); showBonusInfo()"><?=(defined('ISMALUS')) ?  ISMALUS : 'ISMALUS';?></label>
-									        <label class="btn btn-warning"><input <?php echo ($orderData[0]["bonus_type"] == 2 && $orderData[0]["disadvantage_status"] == 1)? 'disabled':'' ?> type="radio" name="bonus_type" value="3" id="option3" <?=(isset($orderData[0]["bonus_type"]) && $orderData[0]["bonus_type"] == 3) ? "checked" : ""?> onclick="addAttrb(); hideBonusInfo()"><?=(defined('NON')) ?  NON : 'NON';?></label>
-											<?php }else {?>
-												<input type="hidden" name="bonus_type" id="option3" value="3">
-											<?php } ?>
-										</div>
-			                        </td>
-			                    </tr>
-                    		<?php
-                    	}
-                    ?>
+        			 <tr>
+                        <td>
+							<label>Բոնուս / Մալուս։</label>
+						</td>
+                        <td>
+							<div style='margin-bottom:10px'>
+								<?php if (empty(array_intersect(array(89),explode(',',$level[0]["user_level"]))) || in_array(99,explode(',',$level[0]["user_level"]))) { ?>
+						        <label class="btn btn-primary" style='float:left;margin-right:2px'><input <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["bonus_type"] == 2 && $orderData[0]["disadvantage_status"] == 1)? 'disabled':'' ?> type="radio" name="bonus_type" value="1" id="option1" <?=(isset($orderData[0]["bonus_type"]) && $orderData[0]["bonus_type"] == 1) ? "checked" : ""?> onclick="addAttrb(); showBonusInfo()"><?=(defined('BONUS')) ?  BONUS : 'BONUS';?></label>
+						        <label class="btn btn-danger"><input <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["bonus_type"] == 2 && $orderData[0]["disadvantage_status"] == 1)? 'disabled':'' ?> type="radio" name="bonus_type" value="2" id="option2" <?=(isset($orderData[0]["bonus_type"]) && $orderData[0]["bonus_type"] == 2) ? "checked" : ""?> onclick="removeAttrb(); showBonusInfo()"><?=(defined('ISMALUS')) ?  ISMALUS : 'ISMALUS';?></label>
+						        <label class="btn btn-warning"><input <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["bonus_type"] == 2 && $orderData[0]["disadvantage_status"] == 1)? 'disabled':'' ?> type="radio" name="bonus_type" value="3" id="option3" <?=(isset($orderData[0]["bonus_type"]) && $orderData[0]["bonus_type"] == 3) ? "checked" : ""?> onclick="addAttrb(); hideBonusInfo()"><?=(defined('NON')) ?  NON : 'NON';?></label>
+								<?php }else {?>
+									<input type="hidden" name="bonus_type" id="option3" value="3">
+								<?php } ?>
+							</div>
+                        </td>
+                    </tr>
                     <tr>
                         <td>
                         	<label class='hoverLinkEffect translateNameToArmenianSenderName'><?=(empty(array_intersect(array(89),explode(",",$get_lvl[0])))) ? ((defined('SENDER_NAME'))? SENDER_NAME :'SENDER_NAME') : ((defined('PARTNER_NAME'))? PARTNER_NAME :'PARTNER_NAME');?>:
                         	</label>
                         	<br>
-	                        <input type='checkbox' name='anonym' value="<?=($orderData[0]["anonym"] == 1) ? 0 : 1?>" <?=($orderData[0]["anonym"] == 1) ? 'checked' : ''?> id='anonym_checkbox'> <label for='anonym_checkbox' class='cursorPointer'><?=ANONYM?></label>
+	                        <input type='checkbox' name='anonym' value="<?=($orderData[0]["anonym"] == 1) ? 0 : 1?>" <?=(isset($_REQUEST['orderId']) && $orderData[0]["anonym"] == 1) ? 'checked' : ''?> id='anonym_checkbox'> <label for='anonym_checkbox' class='cursorPointer'><?=ANONYM?></label>
                         </td>
                         <td><input style='width:255px' value="<?=(isset($orderData[0]["sender_name"])) ? $orderData[0]["sender_name"] : ""?>" type="text" name="sender_name" class="form-control" id="sender_name">
 							<?php
@@ -3557,8 +3577,11 @@ if(isset($_REQUEST['orderId'])){
                             <select name="delivery_reason" id="delivery_reason" class="form-control required selectpicker" data-live-search="true" style="float:left; display:inline-block" required>
                                 <option value=""><?=(defined('SELECT_FROM_LIST')) ?  SELECT_FROM_LIST : 'SELECT_FROM_LIST';?>:</option>
 								<?php
-									$active = (isset($orderData[0]["delivery_reason"])) ? $orderData[0]["delivery_reason"] : false;
-									echo page::buildOptions("delivery_reason",$active);
+									foreach($delivery_reasones as $reason){
+										?>
+											<option <?php echo (isset($_REQUEST['orderId']) && $orderData[0]["delivery_reason"] == $reason['id'])? 'selected' : ''  ?> value="<?php echo $reason['id'] ?>"><?php echo $reason['name'] ?></option>
+										<?php
+									}
 								?>
                             </select>
                         </td>
@@ -3581,7 +3604,7 @@ if(isset($_REQUEST['orderId'])){
                             <select name="delivery_language_primary" id="delivery_language_primary" class="form-control required" style="max-width: 116px; float:left; display:inline-block" required>
                                 <option value=""><?=(defined('PRIMA')) ? PRIMA : 'PRIMA';?>:</option>
 				<?php
-					$active = (isset($orderData[0]["delivery_language_primary"])) ? $orderData[0]["delivery_language_primary"] : false;
+					$active = (isset($orderData[0]["delivery_language_primary"])) ? $orderData[0]["delivery_language_primary"] : 0;
 					
 					echo page::buildOptions("delivery_language",$active);
 				?>
@@ -3589,7 +3612,7 @@ if(isset($_REQUEST['orderId'])){
                             <select name="delivery_language_secondary" id="delivery_language_secondary" class="form-control required" style="max-width: 116px; float:left; display:inline-block" required>
                                 <option value=""><?=(defined('SECONDA')) ? SECONDA : 'SECONDA';?>:</option>
 				<?php
-					$active = (isset($orderData[0]["delivery_language_secondary"])) ? $orderData[0]["delivery_language_secondary"] : false;
+					$active = (isset($orderData[0]["delivery_language_secondary"])) ? $orderData[0]["delivery_language_secondary"] : 0;
 					
 					echo page::buildOptions("delivery_language",$active);
 				?>
@@ -3606,7 +3629,7 @@ if(isset($_REQUEST['orderId'])){
                             <select name="delivery_reason" id="delivery_reason" class="form-control required" style="float:left; display:inline-block" required>
                                 <option value=""><?=(defined('SELECT_FROM_LIST')) ?  SELECT_FROM_LIST : 'SELECT_FROM_LIST';?>:</option>
 				<?php
-					$active = (isset($orderData[0]["delivery_reason"])) ? $orderData[0]["delivery_reason"] : false;
+					$active = (isset($orderData[0]["delivery_reason"])) ? $orderData[0]["delivery_reason"] : 0;
 					
 					echo page::buildOptions("delivery_reason",$active);
 				?>
@@ -3649,28 +3672,30 @@ if(isset($_REQUEST['orderId'])){
 						}
                     ?>
 		            <?php
-						$pending_info = getwayConnect::getwayData("SELECT * FROM `pending_info` LEFT JOIN user on pending_info.operator_id = user.id WHERE `order_id` = '{$orderData[0]["id"]}' and status = '1'");
-						if(!empty($pending_info)){
-							?>
-								<tr><td>
-										<b>
-											<?=OLD_NOTES_FOR_PENDING?>
-										</b>
-									</td>
-									<td>
-										<div>
-											<?php
-												foreach( $pending_info as $key => $value ){
-													?>
-														<p><?= $key + 1 ?>)<span class='color_red'> <?=date("d-M-Y H:i:s",strtotime($value['created_date']))?> ՝ </span> <?=$value['full_name_am']?> ՝ <?=$value['description']?></p>
-													<?php
-												}
-											?>
-										</div>
-									</td>
-								</tr>
-							<?php
-						}
+		            	if(isset($_REQUEST['orderId'])){
+							$pending_info = getwayConnect::getwayData("SELECT * FROM `pending_info` LEFT JOIN user on pending_info.operator_id = user.id WHERE `order_id` = '{$orderData[0]["id"]}' and status = '1'");
+							if(!empty($pending_info)){
+								?>
+									<tr><td>
+											<b>
+												<?=OLD_NOTES_FOR_PENDING?>
+											</b>
+										</td>
+										<td>
+											<div>
+												<?php
+													foreach( $pending_info as $key => $value ){
+														?>
+															<p><?= $key + 1 ?>)<span class='color_red'> <?=date("d-M-Y H:i:s",strtotime($value['created_date']))?> ՝ </span> <?=$value['full_name_am']?> ՝ <?=$value['description']?></p>
+														<?php
+													}
+												?>
+											</div>
+										</td>
+									</tr>
+								<?php
+							}
+		            	}
 		            ?>
 					<tr>
                         <td><label><?=(empty(array_intersect(array(89),explode(',',$level[0]["user_level"])))) ? ((defined('NOTES_FOR_FLORIST'))? NOTES_FOR_FLORIST :'NOTES_FOR_FLORIST') : ((defined('NOTES_FOR_DRIVER'))? NOTES_FOR_DRIVER :'NOTES_FOR_DRIVER');?>: </label></td>
@@ -3807,6 +3832,9 @@ if(isset($_REQUEST['orderId'])){
 								<textarea class="form-control" style='margin-top:10px' name="controller_note" id="controller_note" cols="20" rows="2"><?=(isset($controller_note_row[0])) ? $controller_note_row[0]['value'] : ""?></textarea><br>
 							</td>
 						</tr>
+						<?php
+							if(isset($_GET['orderId'])){
+								?>
 						<tr>
 							<td><label><?=(defined('COMPLAIN_TYPE'))? COMPLAIN_TYPE :'COMPLAIN_TYPE';?>: </label></td>
 							<td>
@@ -3856,6 +3884,7 @@ if(isset($_REQUEST['orderId'])){
 										</td>
 									</tr>
 						<?php
+					}
 							if(isset($_GET['orderId'])){
 								?>
 								<tr class='d-none disadvantage_tr'>

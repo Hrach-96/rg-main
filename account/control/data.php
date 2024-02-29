@@ -47,6 +47,9 @@ if (!(isset($userData["id"]) && (int)$userData["id"] > 0)) {
 if (isset($_POST["posting"]) && $_POST["posting"] == "update") {
     $id = $_POST["id"];
     $sku_code = $_POST["sku_code"];
+    $arm_responsible = $_POST["arm_responsible"];
+    $rus_responsible = $_POST["rus_responsible"];
+    $en_responsible = $_POST["en_responsible"];
     $am_title = $_POST["am_title"];
     $ru_title = $_POST["ru_title"];
     $en_title = $_POST["en_title"];
@@ -95,7 +98,7 @@ if (isset($_POST["posting"]) && $_POST["posting"] == "update") {
     if($everytime_available_post == 'Yes'){
         $everytime_available = 1;
     }
-    $query = "Update sku_info set sku_code='" . $sku_code . "',am_title='" . $am_title . "',ru_title='" . $ru_title . "',en_title='" . $en_title . "',spa_title='" . $spa_title . "',de_title='" . $de_title . "',fr_title='" . $fr_title . "',am_desc='" . $am_desc . "',ru_desc='" . $ru_desc . "',en_desc='" . $en_desc . "',spa_desc='" . $spa_desc . "',de_desc='" . $de_desc . "',fr_desc='" . $fr_desc . "',prepare_time_1='" . $prepare_time_1 . "',prepare_time_2='" . $prepare_time_2 . "',design_time_1='" . $design_time_1 . "',design_time_2='" . $design_time_2 . "',dependent_price='" . $dependent_price . "',depends_from_price='" . $depends_from_price . "',everytime_available='" . $everytime_available . "',quantity='" . $quantity . "',publisheds='" . $publisheds . "',unpublisheds='" . $unpublisheds . "',f_a_com_fixed_price='" . $f_a_com_fixed_price . "',f_a_am_fixed_price='" . $f_a_am_fixed_price . "',f_a_com_procent='" . $f_a_com_procent . "',f_a_am_procent='" . $f_a_am_procent . "',anahit_procent='" . $anahit_procent . "',high_price_partners_procent='" . $high_price_partners_procent . "',low_cost_partners_procent='" . $low_cost_partners_procent . "',title_emoji='" . $title_emoji . "',brand_name='" . $brand_name . "',title_keyword='" . $title_keyword . "',icon='" . $addIconImage . "',ru_rod='" . $ru_rod . "',fr_rod='" . $fr_rod . "',de_rod='" . $de_rod . "',atg_code='" . $atg_code . "' where id = '" . $id . "'";
+    $query = "Update sku_info set sku_code='" . $sku_code . "',am_title='" . $am_title . "',en_responsible='" . $en_responsible . "',arm_responsible='" . $arm_responsible . "',rus_responsible='" . $rus_responsible . "',ru_title='" . $ru_title . "',en_title='" . $en_title . "',spa_title='" . $spa_title . "',de_title='" . $de_title . "',fr_title='" . $fr_title . "',am_desc='" . $am_desc . "',ru_desc='" . $ru_desc . "',en_desc='" . $en_desc . "',spa_desc='" . $spa_desc . "',de_desc='" . $de_desc . "',fr_desc='" . $fr_desc . "',prepare_time_1='" . $prepare_time_1 . "',prepare_time_2='" . $prepare_time_2 . "',design_time_1='" . $design_time_1 . "',design_time_2='" . $design_time_2 . "',dependent_price='" . $dependent_price . "',depends_from_price='" . $depends_from_price . "',everytime_available='" . $everytime_available . "',quantity='" . $quantity . "',publisheds='" . $publisheds . "',unpublisheds='" . $unpublisheds . "',f_a_com_fixed_price='" . $f_a_com_fixed_price . "',f_a_am_fixed_price='" . $f_a_am_fixed_price . "',f_a_com_procent='" . $f_a_com_procent . "',f_a_am_procent='" . $f_a_am_procent . "',anahit_procent='" . $anahit_procent . "',high_price_partners_procent='" . $high_price_partners_procent . "',low_cost_partners_procent='" . $low_cost_partners_procent . "',title_emoji='" . $title_emoji . "',brand_name='" . $brand_name . "',title_keyword='" . $title_keyword . "',icon='" . $addIconImage . "',ru_rod='" . $ru_rod . "',fr_rod='" . $fr_rod . "',de_rod='" . $de_rod . "',atg_code='" . $atg_code . "' where id = '" . $id . "'";
     getwayConnect::getwaySend($query);
     return true;
 }

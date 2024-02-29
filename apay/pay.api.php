@@ -1604,6 +1604,7 @@ class page
 
     public static function buildRelatedOptions($table_name, $rel_table, $active = false, $join = 'RIGHT JOIN ', $on = "", $where = "", $orderby = "")
     {
+        //var_dump("SELECT * FROM {$table_name} {$join} {$rel_table} {$on} {$where} {$orderby}");
         $constants = get_defined_constants();
         $data = getwayConnect::getwayData("SELECT * FROM {$table_name} {$join} {$rel_table} {$on} {$where} {$orderby}", PDO::FETCH_ASSOC);
 

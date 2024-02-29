@@ -318,7 +318,7 @@ if(isset($_REQUEST['get_disadvantage_list']) && $_REQUEST['get_disadvantage_list
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">RG-SYSTEM / <?= strtoupper($userData[0]["username"]); ?></a>
+            <a class="navbar-brand" href="#">RG-SYSTEM / <?php echo strtoupper($userData["username"]); ?></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse" aria-expanded="false">
             <ul class="nav navbar-nav">
@@ -797,7 +797,7 @@ if(isset($_REQUEST['get_disadvantage_list']) && $_REQUEST['get_disadvantage_list
             },
             success: function(resp){
                 if(resp >= 1){
-                    $(".unreadPosts").html("<marquee style='background:red;color:#fff;width:50%;'>Հարգելի <?php echo $userData[0]['full_name_am'] ?> դուք ունեք " + resp + " չկարդացաց կարևոր հայտարարություն, որ հարկավոր է կարդալ և հաստատել․</marquee><script>setTimeout(function(){window.location.href = '/info/malus.php';},900000);")
+                    $(".unreadPosts").html("<marquee style='background:red;color:#fff;width:50%;'>Հարգելի <?php echo $userData['full_name_am'] ?> դուք ունեք " + resp + " չկարդացաց կարևոր հայտարարություն, որ հարկավոր է կարդալ և հաստատել․</marquee><script>setTimeout(function(){window.location.href = '/info/malus.php';},900000);")
                 }
             }
         })
